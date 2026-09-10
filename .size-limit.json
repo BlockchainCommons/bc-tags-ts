@@ -1,0 +1,13 @@
+[
+  {
+    "name": "ESM entry (import *), minified + gzipped",
+    "path": "dist/index.mjs",
+    "limit": "15 kB"
+  },
+  {
+    "name": "ESM entry, package's own code (dcbor external)",
+    "path": "dist/index.mjs",
+    "ignore": ["@blockchaincommons/dcbor"],
+    "limit": "2 kB"
+  }
+]

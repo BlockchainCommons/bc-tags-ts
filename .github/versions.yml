@@ -1,0 +1,8 @@
+# Version map: TypeScript package -> Reference implementation
+# Used by workflow automation to track upstream reference versions.
+packages:
+  tags:
+    npm: "@blockchaincommons/tags"
+    repo: "BlockchainCommons/bc-tags-rust"
+    version: "0.12.0"
+    commit: "fc30b65c82eeca3124288fb9096c31a5631adc87"
