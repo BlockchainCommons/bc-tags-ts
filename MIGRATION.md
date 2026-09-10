@@ -1,71 +1,76 @@
 # Migrating from `@bcts/tags` to `@blockchaincommons/tags`
 
-`@blockchaincommons/tags` is the canonical home of this library. It was extracted from the
-[`paritytech/bcts`](https://github.com/paritytech/bcts) monorepo, where it was
-published as `@bcts/tags`, into its own Blockchain Commons repository at
-[`BlockchainCommons/bc-tags-ts`](https://github.com/BlockchainCommons/bc-tags-ts).
+`@blockchaincommons/tags` is the canonical home of this library. It was
+extracted from the [`paritytech/bcts`](https://github.com/paritytech/bcts)
+monorepo, where it was published as `@bcts/tags`, into its own Blockchain
+Commons repository at
+[`BlockchainCommons/bc-tags-ts`](https://github.com/BlockchainCommons/bc-tags-ts),
+and redesigned as an idiomatic TypeScript library in the same release.
 
-For the extraction release, **`1.0.0-beta.1`, the public API is unchanged.** The
-migration is a rename. `@bcts/tags` remains published for one beta cycle as a
-thin re-export of this package, so nothing breaks the moment you update.
+**Every tag value and name is unchanged.** The 75-entry table and the
+registry `registerTags()` produces are frozen as golden vectors and
+cross-validated against the Rust reference `bc-tags 0.12.0`. What changed is
+the shape of the API and the dcbor it builds on.
 
 ## TL;DR checklist
 
 - [ ] Replace the `@bcts/tags` dependency with `@blockchaincommons/tags`.
 - [ ] Rewrite import specifiers: `@bcts/tags` becomes `@blockchaincommons/tags`.
-- [ ] Raise your Node floor to **22.12**.
-- [ ] Ensure TypeScript **>= 5.7** to consume the published types.
-- [ ] If you relied on the `browser` field or a global-script build, switch to the ESM or CJS entry point.
+- [ ] The tags are now canonical `@blockchaincommons/dcbor` `Tag` values, not
+      `dcbor-compat` ones. If you build tagged CBOR with them, use dcbor.
+- [ ] `registerTagsIn(store)` → `registerTags(store)`; `registerTags()` is unchanged.
+- [ ] `SEED_V1`, `EC_KEY_V1`, `SSKR_SHARE_V1` and the other `*_V1` tags moved
+      under `LEGACY_TAGS` (`LEGACY_TAGS.SEED_V1`).
+- [ ] Import `getGlobalTagsStore` and `TagsStore` from
+      `@blockchaincommons/dcbor`; this package no longer re-exports them.
+- [ ] Raise your Node floor to **22.12** and TypeScript to **>= 5.7**.
 
 ## 1. Package name and imports
 
 ```diff
-- import { /* ... */ } from "@bcts/tags";
-+ import { /* ... */ } from "@blockchaincommons/tags";
+- import { ENVELOPE, registerTags, getGlobalTagsStore } from "@bcts/tags";
++ import { ENVELOPE, registerTags } from "@blockchaincommons/tags";
++ import { getGlobalTagsStore } from "@blockchaincommons/dcbor";
 ```
+
+## 2. Renames
+
+| `@bcts/tags` | `@blockchaincommons/tags` |
+| --- | --- |
+| `ENVELOPE`, `LEAF`, `SEED`, … (66 current tags) | unchanged |
+| `SEED_V1`, `EC_KEY_V1`, `SSKR_SHARE_V1`, `HDKEY_V1`, `DERIVATION_PATH_V1`, `USE_INFO_V1`, `OUTPUT_DESCRIPTOR_V1`, `PSBT_V1`, `ACCOUNT_V1` | `LEGACY_TAGS.SEED_V1`, … (same names as keys) |
+| `registerTagsIn(store)` | `registerTags(store)` |
+| `registerTags()` | unchanged (registers into the global store) |
+| `getGlobalTagsStore`, `TagsStore` (re-exported) | import from `@blockchaincommons/dcbor` |
+| — | `ALL_TAGS: readonly Tag[]`, every tag in registration order |
+
+## 3. Legacy tags
+
+The nine `*_V1` tags (300–311) are superseded and accepted on decode only.
+They are grouped so that they do not read as peers of the current tags:
 
 ```diff
-  "dependencies": {
--   "@bcts/tags": "^1.0.0-beta.6"
-+   "@blockchaincommons/tags": "^1.0.0-beta.1"
-  }
+- import { SEED, SEED_V1 } from "@bcts/tags";
+- const tags = [SEED, SEED_V1];
++ import { SEED, LEGACY_TAGS } from "@blockchaincommons/tags";
++ const tags = [SEED, LEGACY_TAGS.SEED_V1];
 ```
 
-## 2. Version numbering restarts
+They are still in `ALL_TAGS` and still registered by `registerTags()`.
 
-`@bcts/tags` versions moved in lockstep with every other package in the
-monorepo, which is why it reached `1.0.0-beta.6`. Each extracted package now
-versions independently and starts again at `1.0.0-beta.1`. A lower version
-number here does **not** mean older code.
+## 4. Registration semantics
 
-## 3. Node and TypeScript floors moved up
+`registerTags(store)` calls dcbor's `registerStandardTags(store)` (date and
+bignum tags with their summarizers) and then registers `ALL_TAGS`. It is
+idempotent. Registering a value that is already present under a *different*
+name throws, as dcbor's store does.
 
-| | `@bcts/tags` | `@blockchaincommons/tags` |
-|---|---|---|
-| Node | `>= 18` | `>= 22.12` |
-| TypeScript (consumers) | 6.x | `>= 5.7` |
+## 5. Node and TypeScript floors
 
-## 4. The IIFE / global-script build is gone
-
-`@bcts/tags` shipped an additional IIFE bundle exposed through the `browser`
-field. That build is dropped: IIFE entry points cannot share chunks, which forks
-module-level singletons across entry points. Use the ESM entry (`import`) or the
-CJS entry (`require`); both are declared in `exports` and validated in CI by
-`publint` and `@arethetypeswrong/cli`.
-
-## 5. Peer packages renamed too
-
-Every sibling library moved from the `@bcts` scope to `@blockchaincommons`. If
-you depend on more than one, rename them together so a single copy of each
-shared type is resolved:
-
-| Old | New |
-|---|---|
-| `@bcts/dcbor` | `@blockchaincommons/dcbor` |
-| `@bcts/<name>` | `@blockchaincommons/<name>` |
+Node **22.12** and TypeScript **5.7**. The IIFE / global-script build is
+gone; use the ESM or CJS entry.
 
 ## 6. What did not change
 
-- The public API: every exported name, signature and type is identical.
-- The wire format. Encodings produced by `@bcts/tags` decode here, and the reverse.
-- Parity with the Rust reference implementation. See [`RUST_DIVERGENCES.md`](./RUST_DIVERGENCES.md).
+- Every tag value and name, and the registration order.
+- `registerTags()` with no argument.

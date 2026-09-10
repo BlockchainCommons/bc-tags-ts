@@ -25,9 +25,20 @@ bun add @blockchaincommons/tags
 ## Usage Instructions
 
 ```typescript
-import {
-  getGlobalTagsStore,
-} from "@blockchaincommons/tags";
+import { ENVELOPE, LEGACY_TAGS, ALL_TAGS, registerTags } from "@blockchaincommons/tags";
+import { getGlobalTagsStore, TagsStore } from "@blockchaincommons/dcbor";
+
+// Name every Blockchain Commons tag in the global dcbor store (idempotent).
+registerTags();
+getGlobalTagsStore().nameForValue(ENVELOPE.value); // "envelope"
+
+// Or into a store of your own.
+const store = new TagsStore();
+registerTags(store);
+
+// Legacy (decode-only) tags are grouped; everything is iterable via ALL_TAGS.
+LEGACY_TAGS.SEED_V1.value; // 300
+ALL_TAGS.length; // 75
 ```
 
 Runnable examples live in the [`examples/`](https://github.com/BlockchainCommons/bc-tags-ts/tree/master/examples) directory.
@@ -38,7 +49,7 @@ Runnable examples live in the [`examples/`](https://github.com/BlockchainCommons
 
 ### Version History
 
-- **1.0.0-beta.1 (September 9, 2026)** - Initial beta release, extracted from the [`paritytech/bcts`](https://github.com/paritytech/bcts) monorepo.
+- **1.0.0-beta.1 (September 9, 2026)** - Initial beta release, extracted from the [`paritytech/bcts`](https://github.com/paritytech/bcts) monorepo and redesigned as an idiomatic TypeScript library over canonical dcbor ([MIGRATION.md](./MIGRATION.md)). Tag values and names are unchanged and cross-validated against `bc-tags 0.12.0`.
 
 ### Roadmap
 
@@ -47,7 +58,7 @@ Runnable examples live in the [`examples/`](https://github.com/BlockchainCommons
 
 ### Dependencies
 
-`@blockchaincommons/tags` depends on `@blockchaincommons/dcbor-compat` at runtime.
+`@blockchaincommons/tags` depends on `@blockchaincommons/dcbor` at runtime.
 
 To build and work on this library, you'll need the following tools:
 

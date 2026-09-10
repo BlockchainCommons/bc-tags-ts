@@ -2,7 +2,20 @@
 
 ## 1.0.0-beta.1
 
-Extracted from the [`paritytech/bcts`](https://github.com/paritytech/bcts) monorepo, where this library was published as `@bcts/tags`. The public API is unchanged; see [MIGRATION.md](./MIGRATION.md).
+Extracted from the [`paritytech/bcts`](https://github.com/paritytech/bcts)
+monorepo (`@bcts/tags`) and redesigned as an idiomatic TypeScript library;
+see [MIGRATION.md](./MIGRATION.md). Every tag value and name is unchanged.
+
+- Built on canonical `@blockchaincommons/dcbor` (`Tag.from`,
+  `registerStandardTags`, `registerAll`) instead of `dcbor-compat`.
+- `registerTags(store = getGlobalTagsStore())` replaces `registerTagsIn` and
+  the zero-argument `registerTags`; idempotent.
+- `ALL_TAGS`: every tag in registration order.
+- The nine superseded `*_V1` tags are grouped under `LEGACY_TAGS`.
+- No re-exports from dcbor; explicit export list.
+- 75 golden vectors with 80 registry probes, a differential against the
+  frozen pre-redesign bundle, and a Rust cross-validation harness
+  (`tests/rust-validation`, `bc-tags 0.12.0`: 0 mismatches).
 
 ---
 

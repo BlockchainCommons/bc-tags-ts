@@ -1,5 +1,5 @@
-import { Tag, TagsStore, TagsStore as TagsStore$1, getGlobalTagsStore } from "@blockchaincommons/dcbor-compat";
-//#region src/tags-registry.d.ts
+import { Tag, TagsStore } from "@blockchaincommons/dcbor";
+//#region src/tags.d.ts
 declare const URI: Tag;
 declare const UUID: Tag;
 declare const ENCODED_CBOR: Tag;
@@ -55,15 +55,6 @@ declare const SSH_TEXT_PUBLIC_KEY: Tag;
 declare const SSH_TEXT_SIGNATURE: Tag;
 declare const SSH_TEXT_CERTIFICATE: Tag;
 declare const PROVENANCE_MARK: Tag;
-declare const SEED_V1: Tag;
-declare const EC_KEY_V1: Tag;
-declare const SSKR_SHARE_V1: Tag;
-declare const HDKEY_V1: Tag;
-declare const DERIVATION_PATH_V1: Tag;
-declare const USE_INFO_V1: Tag;
-declare const OUTPUT_DESCRIPTOR_V1: Tag;
-declare const PSBT_V1: Tag;
-declare const ACCOUNT_V1: Tag;
 declare const OUTPUT_SCRIPT_HASH: Tag;
 declare const OUTPUT_WITNESS_SCRIPT_HASH: Tag;
 declare const OUTPUT_PUBLIC_KEY: Tag;
@@ -75,20 +66,38 @@ declare const OUTPUT_SORTED_MULTISIG: Tag;
 declare const OUTPUT_RAW_SCRIPT: Tag;
 declare const OUTPUT_TAPROOT: Tag;
 declare const OUTPUT_COSIGNER: Tag;
+/** The legacy tag set; see {@link LEGACY_TAGS}. */
+interface LegacyTags {
+  readonly SEED_V1: Tag;
+  readonly EC_KEY_V1: Tag;
+  readonly SSKR_SHARE_V1: Tag;
+  readonly HDKEY_V1: Tag;
+  readonly DERIVATION_PATH_V1: Tag;
+  readonly USE_INFO_V1: Tag;
+  readonly OUTPUT_DESCRIPTOR_V1: Tag;
+  readonly PSBT_V1: Tag;
+  readonly ACCOUNT_V1: Tag;
+}
 /**
- * Register all Blockchain Commons tags in a specific tags store.
- * This matches the Rust function `register_tags_in()`.
- *
- * @param tagsStore - The tags store to register tags into
+ * Superseded tags, accepted on decode only. They sit in IANA's
+ * "Specification Required" range (300–311) and were replaced by the
+ * first-come-first-served 40300+ tags above; existing data still uses them.
+ * Never emit these for new data.
  */
-declare function registerTagsIn(tagsStore: TagsStore$1): void;
+declare const LEGACY_TAGS: LegacyTags;
 /**
- * Register all Blockchain Commons tags in the global tags store.
- * This matches the Rust function `register_tags()`.
- *
- * This function is idempotent - calling it multiple times is safe.
+ * Every tag this package defines, in registration order (the order the
+ * Rust reference registers them). Iterate this rather than the constants.
  */
-declare function registerTags(): void;
+declare const ALL_TAGS: readonly Tag[];
 //#endregion
-export { ACCOUNT_DESCRIPTOR, ACCOUNT_V1, ADDRESS, ARID, COMPRESSED, DERIVATION_PATH, DERIVATION_PATH_V1, DIGEST, EC_KEY, EC_KEY_V1, ENCODED_CBOR, ENCRYPTED, ENCRYPTED_KEY, ENVELOPE, EVENT, FUNCTION, HDKEY, HDKEY_V1, JSON, KNOWN_VALUE, LEAF, MLDSA_PRIVATE_KEY, MLDSA_PUBLIC_KEY, MLDSA_SIGNATURE, MLKEM_CIPHERTEXT, MLKEM_PRIVATE_KEY, MLKEM_PUBLIC_KEY, NONCE, OUTPUT_COMBO, OUTPUT_COSIGNER, OUTPUT_DESCRIPTOR, OUTPUT_DESCRIPTOR_V1, OUTPUT_MULTISIG, OUTPUT_PUBLIC_KEY, OUTPUT_PUBLIC_KEY_HASH, OUTPUT_RAW_SCRIPT, OUTPUT_SCRIPT_HASH, OUTPUT_SORTED_MULTISIG, OUTPUT_TAPROOT, OUTPUT_WITNESS_PUBLIC_KEY_HASH, OUTPUT_WITNESS_SCRIPT_HASH, PARAMETER, PASSWORD, PLACEHOLDER, PRIVATE_KEYS, PRIVATE_KEY_BASE, PROVENANCE_MARK, PSBT, PSBT_V1, PUBLIC_KEYS, REFERENCE, REPLACEMENT, REQUEST, RESPONSE, SALT, SEALED_MESSAGE, SEED, SEED_V1, SIGNATURE, SIGNING_PRIVATE_KEY, SIGNING_PUBLIC_KEY, SSH_TEXT_CERTIFICATE, SSH_TEXT_PRIVATE_KEY, SSH_TEXT_PUBLIC_KEY, SSH_TEXT_SIGNATURE, SSKR_SHARE, SSKR_SHARE_V1, SYMMETRIC_KEY, type TagsStore, URI, USE_INFO, USE_INFO_V1, UUID, X25519_PRIVATE_KEY, X25519_PUBLIC_KEY, XID, getGlobalTagsStore, registerTags, registerTagsIn };
+//#region src/register.d.ts
+/**
+ * Register dcbor's standard tags and every tag in {@link ALL_TAGS} into
+ * `store` (default: the global store). Idempotent; a value already
+ * registered under a different name throws, as dcbor's store does.
+ */
+declare function registerTags(store?: TagsStore): void;
+//#endregion
+export { ACCOUNT_DESCRIPTOR, ADDRESS, ALL_TAGS, ARID, COMPRESSED, DERIVATION_PATH, DIGEST, EC_KEY, ENCODED_CBOR, ENCRYPTED, ENCRYPTED_KEY, ENVELOPE, EVENT, FUNCTION, HDKEY, JSON, KNOWN_VALUE, LEAF, LEGACY_TAGS, type LegacyTags, MLDSA_PRIVATE_KEY, MLDSA_PUBLIC_KEY, MLDSA_SIGNATURE, MLKEM_CIPHERTEXT, MLKEM_PRIVATE_KEY, MLKEM_PUBLIC_KEY, NONCE, OUTPUT_COMBO, OUTPUT_COSIGNER, OUTPUT_DESCRIPTOR, OUTPUT_MULTISIG, OUTPUT_PUBLIC_KEY, OUTPUT_PUBLIC_KEY_HASH, OUTPUT_RAW_SCRIPT, OUTPUT_SCRIPT_HASH, OUTPUT_SORTED_MULTISIG, OUTPUT_TAPROOT, OUTPUT_WITNESS_PUBLIC_KEY_HASH, OUTPUT_WITNESS_SCRIPT_HASH, PARAMETER, PASSWORD, PLACEHOLDER, PRIVATE_KEYS, PRIVATE_KEY_BASE, PROVENANCE_MARK, PSBT, PUBLIC_KEYS, REFERENCE, REPLACEMENT, REQUEST, RESPONSE, SALT, SEALED_MESSAGE, SEED, SIGNATURE, SIGNING_PRIVATE_KEY, SIGNING_PUBLIC_KEY, SSH_TEXT_CERTIFICATE, SSH_TEXT_PRIVATE_KEY, SSH_TEXT_PUBLIC_KEY, SSH_TEXT_SIGNATURE, SSKR_SHARE, SYMMETRIC_KEY, URI, USE_INFO, UUID, X25519_PRIVATE_KEY, X25519_PUBLIC_KEY, XID, registerTags };
 //# sourceMappingURL=index.d.mts.map

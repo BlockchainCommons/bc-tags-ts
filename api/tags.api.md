@@ -4,18 +4,17 @@
 
 ```ts
 
-import { getGlobalTagsStore } from '@blockchaincommons/dcbor-compat';
-import { Tag } from '@blockchaincommons/dcbor-compat';
-import { TagsStore } from '@blockchaincommons/dcbor-compat';
+import { Tag } from '@blockchaincommons/dcbor';
+import { TagsStore } from '@blockchaincommons/dcbor';
 
 // @public (undocumented)
 export const ACCOUNT_DESCRIPTOR: Tag;
 
 // @public (undocumented)
-export const ACCOUNT_V1: Tag;
-
-// @public (undocumented)
 export const ADDRESS: Tag;
+
+// @public
+export const ALL_TAGS: readonly Tag[];
 
 // @public (undocumented)
 export const ARID: Tag;
@@ -27,16 +26,10 @@ export const COMPRESSED: Tag;
 export const DERIVATION_PATH: Tag;
 
 // @public (undocumented)
-export const DERIVATION_PATH_V1: Tag;
-
-// @public (undocumented)
 export const DIGEST: Tag;
 
 // @public (undocumented)
 export const EC_KEY: Tag;
-
-// @public (undocumented)
-export const EC_KEY_V1: Tag;
 
 // @public (undocumented)
 export const ENCODED_CBOR: Tag;
@@ -56,13 +49,8 @@ export const EVENT: Tag;
 // @public (undocumented)
 export const FUNCTION: Tag;
 
-export { getGlobalTagsStore }
-
 // @public (undocumented)
 export const HDKEY: Tag;
-
-// @public (undocumented)
-export const HDKEY_V1: Tag;
 
 // @public (undocumented)
 const JSON_2: Tag;
@@ -73,6 +61,31 @@ export const KNOWN_VALUE: Tag;
 
 // @public (undocumented)
 export const LEAF: Tag;
+
+// @public
+export const LEGACY_TAGS: LegacyTags;
+
+// @public
+export interface LegacyTags {
+    // (undocumented)
+    readonly ACCOUNT_V1: Tag;
+    // (undocumented)
+    readonly DERIVATION_PATH_V1: Tag;
+    // (undocumented)
+    readonly EC_KEY_V1: Tag;
+    // (undocumented)
+    readonly HDKEY_V1: Tag;
+    // (undocumented)
+    readonly OUTPUT_DESCRIPTOR_V1: Tag;
+    // (undocumented)
+    readonly PSBT_V1: Tag;
+    // (undocumented)
+    readonly SEED_V1: Tag;
+    // (undocumented)
+    readonly SSKR_SHARE_V1: Tag;
+    // (undocumented)
+    readonly USE_INFO_V1: Tag;
+}
 
 // @public (undocumented)
 export const MLDSA_PRIVATE_KEY: Tag;
@@ -103,9 +116,6 @@ export const OUTPUT_COSIGNER: Tag;
 
 // @public (undocumented)
 export const OUTPUT_DESCRIPTOR: Tag;
-
-// @public (undocumented)
-export const OUTPUT_DESCRIPTOR_V1: Tag;
 
 // @public (undocumented)
 export const OUTPUT_MULTISIG: Tag;
@@ -156,19 +166,13 @@ export const PROVENANCE_MARK: Tag;
 export const PSBT: Tag;
 
 // @public (undocumented)
-export const PSBT_V1: Tag;
-
-// @public (undocumented)
 export const PUBLIC_KEYS: Tag;
 
 // @public (undocumented)
 export const REFERENCE: Tag;
 
 // @public
-export function registerTags(): void;
-
-// @public
-export function registerTagsIn(tagsStore: TagsStore): void;
+export function registerTags(store?: TagsStore): void;
 
 // @public (undocumented)
 export const REPLACEMENT: Tag;
@@ -187,9 +191,6 @@ export const SEALED_MESSAGE: Tag;
 
 // @public (undocumented)
 export const SEED: Tag;
-
-// @public (undocumented)
-export const SEED_V1: Tag;
 
 // @public (undocumented)
 export const SIGNATURE: Tag;
@@ -216,21 +217,13 @@ export const SSH_TEXT_SIGNATURE: Tag;
 export const SSKR_SHARE: Tag;
 
 // @public (undocumented)
-export const SSKR_SHARE_V1: Tag;
-
-// @public (undocumented)
 export const SYMMETRIC_KEY: Tag;
-
-export { TagsStore }
 
 // @public (undocumented)
 export const URI: Tag;
 
 // @public (undocumented)
 export const USE_INFO: Tag;
-
-// @public (undocumented)
-export const USE_INFO_V1: Tag;
 
 // @public (undocumented)
 export const UUID: Tag;

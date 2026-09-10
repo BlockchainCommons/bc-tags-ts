@@ -1,20 +1,79 @@
 /**
- * Copyright © 2023-2026 Blockchain Commons, LLC
- * Copyright © 2025-2026 Parity Technologies
+ * @blockchaincommons/tags - the CBOR tags used by Blockchain Commons
+ * protocols (Gordian Envelope, URs, crypto components), as dcbor `Tag`
+ * values, plus {@link registerTags} to name them in a dcbor `TagsStore`.
  *
- *
- * Blockchain Commons CBOR Tags Registry
- *
- * This package provides a comprehensive registry of CBOR tags used by
- * Blockchain Commons protocols, including Gordian Envelope and related
- * cryptographic specifications.
- *
- * This is a 1:1 port of the Rust bc-tags-rust library.
- *
- * @packageDocumentation
+ * @module @blockchaincommons/tags
  */
-
-export * from "./tags-registry";
-
-// Re-export getGlobalTagsStore from dcbor for convenience
-export { getGlobalTagsStore, type TagsStore } from "@blockchaincommons/dcbor-compat";
+export {
+  URI,
+  UUID,
+  ENCODED_CBOR,
+  ENVELOPE,
+  LEAF,
+  JSON,
+  KNOWN_VALUE,
+  DIGEST,
+  ENCRYPTED,
+  COMPRESSED,
+  REQUEST,
+  RESPONSE,
+  FUNCTION,
+  PARAMETER,
+  PLACEHOLDER,
+  REPLACEMENT,
+  X25519_PRIVATE_KEY,
+  X25519_PUBLIC_KEY,
+  ARID,
+  PRIVATE_KEYS,
+  NONCE,
+  PASSWORD,
+  PRIVATE_KEY_BASE,
+  PUBLIC_KEYS,
+  SALT,
+  SEALED_MESSAGE,
+  SIGNATURE,
+  SIGNING_PRIVATE_KEY,
+  SIGNING_PUBLIC_KEY,
+  SYMMETRIC_KEY,
+  XID,
+  REFERENCE,
+  EVENT,
+  ENCRYPTED_KEY,
+  MLKEM_PRIVATE_KEY,
+  MLKEM_PUBLIC_KEY,
+  MLKEM_CIPHERTEXT,
+  MLDSA_PRIVATE_KEY,
+  MLDSA_PUBLIC_KEY,
+  MLDSA_SIGNATURE,
+  SEED,
+  HDKEY,
+  DERIVATION_PATH,
+  USE_INFO,
+  EC_KEY,
+  ADDRESS,
+  OUTPUT_DESCRIPTOR,
+  SSKR_SHARE,
+  PSBT,
+  ACCOUNT_DESCRIPTOR,
+  SSH_TEXT_PRIVATE_KEY,
+  SSH_TEXT_PUBLIC_KEY,
+  SSH_TEXT_SIGNATURE,
+  SSH_TEXT_CERTIFICATE,
+  PROVENANCE_MARK,
+  OUTPUT_SCRIPT_HASH,
+  OUTPUT_WITNESS_SCRIPT_HASH,
+  OUTPUT_PUBLIC_KEY,
+  OUTPUT_PUBLIC_KEY_HASH,
+  OUTPUT_WITNESS_PUBLIC_KEY_HASH,
+  OUTPUT_COMBO,
+  OUTPUT_MULTISIG,
+  OUTPUT_SORTED_MULTISIG,
+  OUTPUT_RAW_SCRIPT,
+  OUTPUT_TAPROOT,
+  OUTPUT_COSIGNER,
+  LEGACY_TAGS,
+  type LegacyTags,
+  ALL_TAGS,
+} from "./tags.js";
+export { registerTags } from "./register.js";

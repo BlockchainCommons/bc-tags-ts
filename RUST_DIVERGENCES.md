@@ -19,21 +19,25 @@ differs from the Rust reference. It has three kinds of entry:
 
 ## 1. True behavioral divergences
 
-_None recorded yet for the extraction release. The port was byte-compatible with
-the Rust reference at the tracked version when it was extracted from the
-`paritytech/bcts` monorepo._
-
-> Any divergence found after extraction must be added here in the same commit
-> that introduces or discovers it, with the input, the Rust outcome, the
-> TypeScript outcome, and the reason the difference is intentional.
+_None._ Every constant's value and name, and the registry `registerTags()`
+produces, match `bc-tags 0.12.0` through `tests/rust-validation`
+(`cargo run --release -- ../vectors/vectors.json`).
 
 ## 2. JS-only input domain
 
-_To be documented as the surface is audited._
+_None._ The package has no inputs beyond the store to register into.
 
 ## 3. Mapping equivalences
 
-_To be documented as the surface is audited._
+- **Bignum tags.** `dcbor::register_tags_in` registers tags 2 and 3 only
+  with the crate's `num-bigint` feature; TypeScript's `registerStandardTags`
+  always does. The harness enables the feature so the registries compare like
+  for like.
+- **`LEGACY_TAGS`.** Rust exports `SEED_V1` etc. as flat constants;
+  TypeScript groups them under `LEGACY_TAGS` with the same keys. The vectors
+  record the inner key, so the table is identical.
+- **`registerTags(store?)`** ↔ `register_tags_in(&mut store)` /
+  `register_tags()`.
 
 ## Maintenance
 

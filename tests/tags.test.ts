@@ -1,5 +1,5 @@
 import * as tags from "../src/index";
-import { getGlobalTagsStore } from "@blockchaincommons/dcbor-compat";
+import { getGlobalTagsStore, TagsStore } from "@blockchaincommons/dcbor";
 
 describe("Tags Registry", () => {
   describe("Core Envelope Tags", () => {
@@ -322,6 +322,16 @@ describe("Tags Registry", () => {
       expect(tagsStore.nameForValue(tags.DIGEST.value)).toBe("digest");
     });
 
+    it("registers into a caller-supplied store and is idempotent", () => {
+      const store = new TagsStore();
+      tags.registerTags(store);
+      tags.registerTags(store);
+      expect(store.nameForValue(1)).toBe("date");
+      expect(store.nameForValue(tags.LEGACY_TAGS.SEED_V1.value)).toBe("crypto-seed");
+      expect(store.nameForValue(tags.PROVENANCE_MARK.value)).toBe("provenance");
+      expect(tags.ALL_TAGS.length).toBe(75);
+    });
+
     it("should handle tag lookup for unregistered tags", () => {
       const tagsStore = getGlobalTagsStore();
 
@@ -336,16 +346,13 @@ describe("Tags Registry", () => {
       const duplicates: number[] = [];
 
       // Get all exported tag constants
-      const tagExports = Object.values(tags).filter(
-        (value): value is { value: number; name: string } =>
-          typeof value === "object" && value !== null && "value" in value && "name" in value,
-      );
+      const tagExports = tags.ALL_TAGS;
 
       for (const tag of tagExports) {
-        if (tagValues.has(tag.value)) {
-          duplicates.push(tag.value);
+        if (tagValues.has(Number(tag.value))) {
+          duplicates.push(Number(tag.value));
         }
-        tagValues.add(tag.value);
+        tagValues.add(Number(tag.value));
       }
 
       expect(duplicates).toEqual([]);
@@ -353,24 +360,18 @@ describe("Tags Registry", () => {
 
     it("should have tag values that match CBOR encoding requirements", () => {
       // Test that tags are valid CBOR tag values (non-negative integers)
-      const tagExports = Object.values(tags).filter(
-        (value): value is { value: number; name: string } =>
-          typeof value === "object" && value !== null && "value" in value && "name" in value,
-      );
+      const tagExports = tags.ALL_TAGS;
 
       for (const tag of tagExports) {
-        expect(tag.value).toBeGreaterThanOrEqual(0);
-        expect(Number.isInteger(tag.value)).toBe(true);
+        expect(Number(tag.value)).toBeGreaterThanOrEqual(0);
+        expect(Number.isInteger(Number(tag.value))).toBe(true);
       }
     });
   });
 
   describe("Tag Name Consistency", () => {
     it("should have lowercase hyphenated tag names", () => {
-      const tagExports = Object.values(tags).filter(
-        (value): value is { value: number; name: string } =>
-          typeof value === "object" && value !== null && "value" in value && "name" in value,
-      );
+      const tagExports = tags.ALL_TAGS;
 
       for (const tag of tagExports) {
         // Tag names should be lowercase and use hyphens
