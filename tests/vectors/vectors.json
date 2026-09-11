@@ -1,0 +1,702 @@
+{
+ "count": 75,
+ "table": [
+  {
+   "const": "TAG_ENCODED_CBOR",
+   "value": 24,
+   "name": "encoded-cbor"
+  },
+  {
+   "const": "TAG_URI",
+   "value": 32,
+   "name": "url"
+  },
+  {
+   "const": "TAG_UUID",
+   "value": 37,
+   "name": "uuid"
+  },
+  {
+   "const": "TAG_ENVELOPE",
+   "value": 200,
+   "name": "envelope"
+  },
+  {
+   "const": "TAG_LEAF",
+   "value": 201,
+   "name": "leaf"
+  },
+  {
+   "const": "TAG_JSON",
+   "value": 262,
+   "name": "json"
+  },
+  {
+   "const": "SEED_V1",
+   "value": 300,
+   "name": "crypto-seed"
+  },
+  {
+   "const": "HDKEY_V1",
+   "value": 303,
+   "name": "crypto-hdkey"
+  },
+  {
+   "const": "DERIVATION_PATH_V1",
+   "value": 304,
+   "name": "crypto-keypath"
+  },
+  {
+   "const": "USE_INFO_V1",
+   "value": 305,
+   "name": "crypto-coin-info"
+  },
+  {
+   "const": "EC_KEY_V1",
+   "value": 306,
+   "name": "crypto-eckey"
+  },
+  {
+   "const": "OUTPUT_DESCRIPTOR_V1",
+   "value": 307,
+   "name": "crypto-output"
+  },
+  {
+   "const": "SSKR_SHARE_V1",
+   "value": 309,
+   "name": "crypto-sskr"
+  },
+  {
+   "const": "PSBT_V1",
+   "value": 310,
+   "name": "crypto-psbt"
+  },
+  {
+   "const": "ACCOUNT_V1",
+   "value": 311,
+   "name": "crypto-account"
+  },
+  {
+   "const": "TAG_OUTPUT_SCRIPT_HASH",
+   "value": 400,
+   "name": "output-script-hash"
+  },
+  {
+   "const": "TAG_OUTPUT_WITNESS_SCRIPT_HASH",
+   "value": 401,
+   "name": "output-witness-script-hash"
+  },
+  {
+   "const": "TAG_OUTPUT_PUBLIC_KEY",
+   "value": 402,
+   "name": "output-public-key"
+  },
+  {
+   "const": "TAG_OUTPUT_PUBLIC_KEY_HASH",
+   "value": 403,
+   "name": "output-public-key-hash"
+  },
+  {
+   "const": "TAG_OUTPUT_WITNESS_PUBLIC_KEY_HASH",
+   "value": 404,
+   "name": "output-witness-public-key-hash"
+  },
+  {
+   "const": "TAG_OUTPUT_COMBO",
+   "value": 405,
+   "name": "output-combo"
+  },
+  {
+   "const": "TAG_OUTPUT_MULTISIG",
+   "value": 406,
+   "name": "output-multisig"
+  },
+  {
+   "const": "TAG_OUTPUT_SORTED_MULTISIG",
+   "value": 407,
+   "name": "output-sorted-multisig"
+  },
+  {
+   "const": "TAG_OUTPUT_RAW_SCRIPT",
+   "value": 408,
+   "name": "output-raw-script"
+  },
+  {
+   "const": "TAG_OUTPUT_TAPROOT",
+   "value": 409,
+   "name": "output-taproot"
+  },
+  {
+   "const": "TAG_OUTPUT_COSIGNER",
+   "value": 410,
+   "name": "output-cosigner"
+  },
+  {
+   "const": "TAG_KNOWN_VALUE",
+   "value": 40000,
+   "name": "known-value"
+  },
+  {
+   "const": "TAG_DIGEST",
+   "value": 40001,
+   "name": "digest"
+  },
+  {
+   "const": "TAG_ENCRYPTED",
+   "value": 40002,
+   "name": "encrypted"
+  },
+  {
+   "const": "TAG_COMPRESSED",
+   "value": 40003,
+   "name": "compressed"
+  },
+  {
+   "const": "TAG_REQUEST",
+   "value": 40004,
+   "name": "request"
+  },
+  {
+   "const": "TAG_RESPONSE",
+   "value": 40005,
+   "name": "response"
+  },
+  {
+   "const": "TAG_FUNCTION",
+   "value": 40006,
+   "name": "function"
+  },
+  {
+   "const": "TAG_PARAMETER",
+   "value": 40007,
+   "name": "parameter"
+  },
+  {
+   "const": "TAG_PLACEHOLDER",
+   "value": 40008,
+   "name": "placeholder"
+  },
+  {
+   "const": "TAG_REPLACEMENT",
+   "value": 40009,
+   "name": "replacement"
+  },
+  {
+   "const": "TAG_X25519_PRIVATE_KEY",
+   "value": 40010,
+   "name": "agreement-private-key"
+  },
+  {
+   "const": "TAG_X25519_PUBLIC_KEY",
+   "value": 40011,
+   "name": "agreement-public-key"
+  },
+  {
+   "const": "TAG_ARID",
+   "value": 40012,
+   "name": "arid"
+  },
+  {
+   "const": "TAG_PRIVATE_KEYS",
+   "value": 40013,
+   "name": "crypto-prvkeys"
+  },
+  {
+   "const": "TAG_NONCE",
+   "value": 40014,
+   "name": "nonce"
+  },
+  {
+   "const": "TAG_PASSWORD",
+   "value": 40015,
+   "name": "password"
+  },
+  {
+   "const": "TAG_PRIVATE_KEY_BASE",
+   "value": 40016,
+   "name": "crypto-prvkey-base"
+  },
+  {
+   "const": "TAG_PUBLIC_KEYS",
+   "value": 40017,
+   "name": "crypto-pubkeys"
+  },
+  {
+   "const": "TAG_SALT",
+   "value": 40018,
+   "name": "salt"
+  },
+  {
+   "const": "TAG_SEALED_MESSAGE",
+   "value": 40019,
+   "name": "crypto-sealed"
+  },
+  {
+   "const": "TAG_SIGNATURE",
+   "value": 40020,
+   "name": "signature"
+  },
+  {
+   "const": "TAG_SIGNING_PRIVATE_KEY",
+   "value": 40021,
+   "name": "signing-private-key"
+  },
+  {
+   "const": "TAG_SIGNING_PUBLIC_KEY",
+   "value": 40022,
+   "name": "signing-public-key"
+  },
+  {
+   "const": "TAG_SYMMETRIC_KEY",
+   "value": 40023,
+   "name": "crypto-key"
+  },
+  {
+   "const": "TAG_XID",
+   "value": 40024,
+   "name": "xid"
+  },
+  {
+   "const": "TAG_REFERENCE",
+   "value": 40025,
+   "name": "reference"
+  },
+  {
+   "const": "TAG_EVENT",
+   "value": 40026,
+   "name": "event"
+  },
+  {
+   "const": "TAG_ENCRYPTED_KEY",
+   "value": 40027,
+   "name": "encrypted-key"
+  },
+  {
+   "const": "TAG_MLKEM_PRIVATE_KEY",
+   "value": 40100,
+   "name": "mlkem-private-key"
+  },
+  {
+   "const": "TAG_MLKEM_PUBLIC_KEY",
+   "value": 40101,
+   "name": "mlkem-public-key"
+  },
+  {
+   "const": "TAG_MLKEM_CIPHERTEXT",
+   "value": 40102,
+   "name": "mlkem-ciphertext"
+  },
+  {
+   "const": "TAG_MLDSA_PRIVATE_KEY",
+   "value": 40103,
+   "name": "mldsa-private-key"
+  },
+  {
+   "const": "TAG_MLDSA_PUBLIC_KEY",
+   "value": 40104,
+   "name": "mldsa-public-key"
+  },
+  {
+   "const": "TAG_MLDSA_SIGNATURE",
+   "value": 40105,
+   "name": "mldsa-signature"
+  },
+  {
+   "const": "TAG_SEED",
+   "value": 40300,
+   "name": "seed"
+  },
+  {
+   "const": "TAG_HDKEY",
+   "value": 40303,
+   "name": "hdkey"
+  },
+  {
+   "const": "TAG_DERIVATION_PATH",
+   "value": 40304,
+   "name": "keypath"
+  },
+  {
+   "const": "TAG_USE_INFO",
+   "value": 40305,
+   "name": "coin-info"
+  },
+  {
+   "const": "TAG_EC_KEY",
+   "value": 40306,
+   "name": "eckey"
+  },
+  {
+   "const": "TAG_ADDRESS",
+   "value": 40307,
+   "name": "address"
+  },
+  {
+   "const": "TAG_OUTPUT_DESCRIPTOR",
+   "value": 40308,
+   "name": "output-descriptor"
+  },
+  {
+   "const": "TAG_SSKR_SHARE",
+   "value": 40309,
+   "name": "sskr"
+  },
+  {
+   "const": "TAG_PSBT",
+   "value": 40310,
+   "name": "psbt"
+  },
+  {
+   "const": "TAG_ACCOUNT_DESCRIPTOR",
+   "value": 40311,
+   "name": "account-descriptor"
+  },
+  {
+   "const": "TAG_SSH_TEXT_PRIVATE_KEY",
+   "value": 40800,
+   "name": "ssh-private"
+  },
+  {
+   "const": "TAG_SSH_TEXT_PUBLIC_KEY",
+   "value": 40801,
+   "name": "ssh-public"
+  },
+  {
+   "const": "TAG_SSH_TEXT_SIGNATURE",
+   "value": 40802,
+   "name": "ssh-signature"
+  },
+  {
+   "const": "TAG_SSH_TEXT_CERTIFICATE",
+   "value": 40803,
+   "name": "ssh-certificate"
+  },
+  {
+   "const": "TAG_PROVENANCE_MARK",
+   "value": 1347571542,
+   "name": "provenance"
+  }
+ ],
+ "registry": [
+  [
+   1,
+   "date"
+  ],
+  [
+   2,
+   "positive-bignum"
+  ],
+  [
+   3,
+   "negative-bignum"
+  ],
+  [
+   24,
+   "encoded-cbor"
+  ],
+  [
+   32,
+   "url"
+  ],
+  [
+   37,
+   "uuid"
+  ],
+  [
+   100,
+   "100"
+  ],
+  [
+   200,
+   "envelope"
+  ],
+  [
+   201,
+   "leaf"
+  ],
+  [
+   262,
+   "json"
+  ],
+  [
+   300,
+   "crypto-seed"
+  ],
+  [
+   303,
+   "crypto-hdkey"
+  ],
+  [
+   304,
+   "crypto-keypath"
+  ],
+  [
+   305,
+   "crypto-coin-info"
+  ],
+  [
+   306,
+   "crypto-eckey"
+  ],
+  [
+   307,
+   "crypto-output"
+  ],
+  [
+   309,
+   "crypto-sskr"
+  ],
+  [
+   310,
+   "crypto-psbt"
+  ],
+  [
+   311,
+   "crypto-account"
+  ],
+  [
+   400,
+   "output-script-hash"
+  ],
+  [
+   401,
+   "output-witness-script-hash"
+  ],
+  [
+   402,
+   "output-public-key"
+  ],
+  [
+   403,
+   "output-public-key-hash"
+  ],
+  [
+   404,
+   "output-witness-public-key-hash"
+  ],
+  [
+   405,
+   "output-combo"
+  ],
+  [
+   406,
+   "output-multisig"
+  ],
+  [
+   407,
+   "output-sorted-multisig"
+  ],
+  [
+   408,
+   "output-raw-script"
+  ],
+  [
+   409,
+   "output-taproot"
+  ],
+  [
+   410,
+   "output-cosigner"
+  ],
+  [
+   40000,
+   "known-value"
+  ],
+  [
+   40001,
+   "digest"
+  ],
+  [
+   40002,
+   "encrypted"
+  ],
+  [
+   40003,
+   "compressed"
+  ],
+  [
+   40004,
+   "request"
+  ],
+  [
+   40005,
+   "response"
+  ],
+  [
+   40006,
+   "function"
+  ],
+  [
+   40007,
+   "parameter"
+  ],
+  [
+   40008,
+   "placeholder"
+  ],
+  [
+   40009,
+   "replacement"
+  ],
+  [
+   40010,
+   "agreement-private-key"
+  ],
+  [
+   40011,
+   "agreement-public-key"
+  ],
+  [
+   40012,
+   "arid"
+  ],
+  [
+   40013,
+   "crypto-prvkeys"
+  ],
+  [
+   40014,
+   "nonce"
+  ],
+  [
+   40015,
+   "password"
+  ],
+  [
+   40016,
+   "crypto-prvkey-base"
+  ],
+  [
+   40017,
+   "crypto-pubkeys"
+  ],
+  [
+   40018,
+   "salt"
+  ],
+  [
+   40019,
+   "crypto-sealed"
+  ],
+  [
+   40020,
+   "signature"
+  ],
+  [
+   40021,
+   "signing-private-key"
+  ],
+  [
+   40022,
+   "signing-public-key"
+  ],
+  [
+   40023,
+   "crypto-key"
+  ],
+  [
+   40024,
+   "xid"
+  ],
+  [
+   40025,
+   "reference"
+  ],
+  [
+   40026,
+   "event"
+  ],
+  [
+   40027,
+   "encrypted-key"
+  ],
+  [
+   40100,
+   "mlkem-private-key"
+  ],
+  [
+   40101,
+   "mlkem-public-key"
+  ],
+  [
+   40102,
+   "mlkem-ciphertext"
+  ],
+  [
+   40103,
+   "mldsa-private-key"
+  ],
+  [
+   40104,
+   "mldsa-public-key"
+  ],
+  [
+   40105,
+   "mldsa-signature"
+  ],
+  [
+   40300,
+   "seed"
+  ],
+  [
+   40303,
+   "hdkey"
+  ],
+  [
+   40304,
+   "keypath"
+  ],
+  [
+   40305,
+   "coin-info"
+  ],
+  [
+   40306,
+   "eckey"
+  ],
+  [
+   40307,
+   "address"
+  ],
+  [
+   40308,
+   "output-descriptor"
+  ],
+  [
+   40309,
+   "sskr"
+  ],
+  [
+   40310,
+   "psbt"
+  ],
+  [
+   40311,
+   "account-descriptor"
+  ],
+  [
+   40800,
+   "ssh-private"
+  ],
+  [
+   40801,
+   "ssh-public"
+  ],
+  [
+   40802,
+   "ssh-signature"
+  ],
+  [
+   40803,
+   "ssh-certificate"
+  ],
+  [
+   999999,
+   "999999"
+  ],
+  [
+   1347571542,
+   "provenance"
+  ]
+ ]
+}
