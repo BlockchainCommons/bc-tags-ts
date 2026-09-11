@@ -4,8 +4,6 @@
 
 **`bc-tags-ts`** is the registry of CBOR tags used across Blockchain Commons specifications, with their names and assigned values.
 
-Every tag is a frozen `@blockchaincommons/dcbor` `Tag` value spelled `TAG_<NAME>` (`TAG_ENVELOPE`, `TAG_SEED`, …), the same spelling as the Rust reference and as dcbor's own tags. `registerTags` names all of them in a dcbor `TagsStore` so diagnostic output and URs can use the names.
-
 ## Installation Instructions
 
 [@blockchaincommons/tags](https://www.npmjs.com/package/@blockchaincommons/tags) is published to npm. Install it with your package manager of choice:
@@ -19,8 +17,6 @@ yarn add @blockchaincommons/tags
 # or
 bun add @blockchaincommons/tags
 ```
-
-**Requirements:** TypeScript >= 5.7 is required to consume the published types. Node >= 22.12 is required.
 
 ## Usage Instructions
 
@@ -74,7 +70,7 @@ Runnable examples live in the [`examples/`](https://github.com/BlockchainCommons
 To build and work on this library, you'll need the following tools:
 
 - [Node.js](https://nodejs.org/) >= 22.12 - JavaScript runtime.
-- [Bun](https://bun.sh/) - used in CI to install dependencies and run scripts (any Node-compatible package manager also works).
+- [Bun](https://bun.sh/) - used to install dependencies and run scripts (any node package manager works).
 - [TypeScript](https://www.typescriptlang.org/) >= 5.7 - language and type checker.
 
 ### Derived from ...
@@ -82,7 +78,7 @@ To build and work on this library, you'll need the following tools:
 This `bc-tags-ts` project is either derived from or was inspired by:
 
 - [BlockchainCommons/bc-tags-rust](https://github.com/BlockchainCommons/bc-tags-rust) - The reference Rust implementation, by [Wolf McNally](https://github.com/wolfmcnally).
-- [paritytech/bcts](https://github.com/paritytech/bcts) - A TypeScript port covering many Blockchain Commons' implementations, by [Parity Technologies](https://github.com/paritytech).
+- [paritytech/bcts](https://github.com/paritytech/bcts) - A TypeScript port of many Blockchain Commons' specs, by [Parity Technologies](https://github.com/paritytech).
 
 ## Financial Support
 

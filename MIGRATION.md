@@ -1,12 +1,5 @@
 # Migrating from `@bcts/tags` to `@blockchaincommons/tags`
 
-`@blockchaincommons/tags` is the canonical home of this library. It was
-extracted from the [`paritytech/bcts`](https://github.com/paritytech/bcts)
-monorepo, where it was published as `@bcts/tags`, into its own Blockchain
-Commons repository at
-[`BlockchainCommons/bc-tags-ts`](https://github.com/BlockchainCommons/bc-tags-ts),
-and redesigned as an idiomatic TypeScript library in the same release.
-
 **Every tag value and name is unchanged.** The 75-entry table and the
 registry `registerTags()` produces are frozen as golden vectors and
 cross-validated against the Rust reference `bc-tags 0.12.0`. What changed is
