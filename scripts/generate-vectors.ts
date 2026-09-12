@@ -1,5 +1,5 @@
 /**
- * Golden vector generator. `bun scripts/generate-vectors.mjs`.
+ * Golden vector generator. `bun scripts/generate-vectors.ts`.
  * Writes tests/vectors/vectors.json from the WORKING TREE. Regenerating is a
  * deliberate, reviewed act: a changed value or name is a wire change.
  */

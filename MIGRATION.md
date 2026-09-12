@@ -1,10 +1,6 @@
 # Migrating from `@bcts/tags` to `@blockchaincommons/tags`
 
-**Every tag value and name is unchanged.** The 75-entry table and the
-registry `registerTags()` produces are frozen as golden vectors and
-cross-validated against the Rust reference `bc-tags 0.12.0`. What changed is
-the spelling of the constants, their immutability, and the dcbor they build
-on.
+`@blockchaincommons/tags` is the redesigned successor to `@bcts/tags`.
 
 ## TL;DR checklist
 

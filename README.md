@@ -56,6 +56,7 @@ Runnable examples live in the [`examples/`](https://github.com/BlockchainCommons
 
 ### Version History
 
+- **1.0.0-beta.2 (September 12, 2026)** - Documents the bignum-registration difference from Rust builds without `num-bigint`.
 - **1.0.0-beta.1 (September 9, 2026)** - Initial beta implementation.
 
 ### Roadmap
