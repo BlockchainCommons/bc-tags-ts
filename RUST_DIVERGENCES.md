@@ -1,60 +1,70 @@
-# Divergences from the Rust reference implementation
+# Compatibility with the Rust reference
 
-This library is a TypeScript port of
-[`BlockchainCommons/bc-tags-rust`](https://github.com/BlockchainCommons/bc-tags-rust),
-tracked at version **0.12.0**
-([`fc30b65`](https://github.com/BlockchainCommons/bc-tags-rust/commit/fc30b65c82eeca3124288fb9096c31a5631adc87)).
+This package tracks `bc-tags` **0.12.0**, commit
+[`fc30b65c82eeca3124288fb9096c31a5631adc87`](https://github.com/BlockchainCommons/bc-tags-rust/commit/fc30b65c82eeca3124288fb9096c31a5631adc87).
+The version and commit are recorded in [`.github/versions.yml`](./.github/versions.yml).
 
-The tracked version and commit are recorded in
-[`.github/versions.yml`](./.github/versions.yml), and the `upstream.yml`
-workflow opens a tracking issue whenever the reference implementation moves
-ahead of it.
+## Remaining difference: default bignum registration
 
-This document is the deliberate record of every place the TypeScript behaviour
-differs from the Rust reference. It has three kinds of entry:
+TypeScript's `registerTags` calls dcbor's `registerStandardTags`, which registers
+`date` (tag 1), `positive-bignum` (tag 2), and `negative-bignum` (tag 3), including
+their summarizers. The TypeScript bignum functionality is always available.
 
-1. **True behavioral divergences** - the same input produces a different outcome.
-2. **JS-only input domain** - inputs that have no Rust analog, so there is nothing to diverge from.
-3. **Mapping equivalences** - JS-specific inputs that are validated through the bytes they produce.
+Rust's equivalent registers tags 2 and 3 only when dcbor's `num-bigint` feature
+is enabled. Without it, the registry returns the numeric names `"2"` and `"3"`
+and has no bignum summarizers. This is an observable registry difference for the
+same input, rather than an input that only JavaScript can express. It originates
+in the dcbor dependency; bc-tags does not change CBOR tag numbers or encoded bytes.
 
-## 1. True behavioral divergences
+The Rust validation harness enables `num-bigint` explicitly. Its matching results
+therefore establish compatibility with that feature configuration, not with a
+Rust build lacking bignum support. An optional registration setting in dcbor-ts
+would be needed to reproduce the feature-disabled registry without changing its
+default behavior.
 
-_None._ Every constant's value and name, and the registry `registerTags()`
-produces, match `bc-tags 0.12.0` through `tests/rust-validation`
-(`cargo run --release -- ../vectors/vectors.json`): **75 tags, 80 registry
-probes, 0 mismatch** (last run 2026-09-11, after the `TAG_` rename).
+## Validation
 
-## 2. JS-only input domain
+Run from `tests/rust-validation`:
 
-_None._ The package has no inputs beyond the store to register into.
+```sh
+cargo run --release -- ../vectors/vectors.json
+```
 
-## 3. Mapping equivalences
+Result on 2026-09-12, with `num-bigint` enabled:
 
-- **Constants.** Rust defines, per tag, `TAG_<NAME>: u64`,
-  `TAG_NAME_<NAME>: &str` and builds a `Tag` with `cbor_tag!(<NAME>)`;
-  TypeScript exports one frozen `TAG_<NAME>: Tag` carrying both (the number
-  is `TAG_<NAME>.value`). Same spelling, one constant instead of three.
-- **Immutability.** Rust's `const` cannot be mutated; TypeScript's
-  constants are `Object.freeze`d, so mutation throws a `TypeError`.
-- **IANA tags.** `TAG_URI` (32), `TAG_UUID` (37) and `TAG_ENCODED_CBOR`
-  (24) take their numbers from dcbor-ts's constants of the same name;
-  Rust's dcbor does not define them, so `bc-tags` writes the numbers.
-- **Bignum tags.** `dcbor::register_tags_in` registers tags 2 and 3 only
-  with the crate's `num-bigint` feature; TypeScript's `registerStandardTags`
-  always does. The harness enables the feature so the registries compare like
-  for like.
-- **`LEGACY_TAGS`.** Rust exports `SEED_V1` etc. as flat constants;
-  TypeScript groups them under `LEGACY_TAGS` with the same keys. The vectors
-  record the inner key, so the table is identical.
-- **`registerTags(store?)`** ↔ `register_tags_in(&mut store)` /
-  `register_tags()`.
+```
+75 tags, 80 registry probes - 0 MISMATCH
+```
+
+The harness checks registered names by value, values by name, registry probes,
+and the expected count of 75 constants. It does not exhaust every possible store
+state or prove error-message equivalence. TypeScript tests additionally cover
+registration and exported constants. No other behavioral difference is currently
+recorded for the matching Rust feature configuration.
+
+## API and language mappings
+
+- **Constants:** Rust exposes numeric `TAG_<NAME>` and string `TAG_NAME_<NAME>`
+  constants; TypeScript exposes a frozen `Tag` carrying both. Use `.value` for
+  the number and `Tag.equals` for value equality, rather than object identity.
+- **ALL_TAGS:** TypeScript exports the frozen registration list. Rust keeps its
+  registration list inside `register_tags_in`.
+- **LEGACY_TAGS:** TypeScript groups the legacy constants under this object;
+  Rust exposes flat constants. Their values and names match.
+- **Immutability:** TypeScript freezes tag objects and arrays. Assignments fail
+  with TypeError in strict-mode code; non-strict assignments may silently do
+  nothing. Rust constants cannot be mutated.
+- **IANA tags:** URI (32), UUID (37), and encoded CBOR (24) use the same values,
+  whether imported from dcbor-ts or written directly in Rust's tag definitions.
+- **Registration:** `registerTags(store?)` maps to `register_tags_in` for a
+  supplied store and `register_tags` for the global store. Repeating a matching
+  value/name registration is a no-op. Conflicting names for an existing value
+  cause a dcbor Error in TypeScript and a panic in Rust. These are language-specific
+  failure mechanisms, not a promise of identical exception types.
 
 ## Maintenance
 
-When the upstream reference moves:
-
-1. Review the diff via the link in the `upstream.yml` tracking issue.
-2. Port the relevant changes.
-3. Update `.github/versions.yml` with the new version and commit.
-4. Update the tracked version at the top of this file.
-5. Add, amend, or remove divergence entries as the port requires.
+When the reference changes, review its diff, update `.github/versions.yml` and
+the harness dependency, regenerate vectors, and run both package tests and Rust
+validation. Keep the feature configuration explicit. Record newly observed
+behavioral differences with reproducible inputs and outcomes.
