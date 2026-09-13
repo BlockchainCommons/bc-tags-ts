@@ -44,7 +44,16 @@ describe("differential: baseline vs working tree", () => {
   it("table (const column modulo the TAG_ prefix)", () => {
     expect(b.table.map(unprefixed)).toEqual(a.table);
   });
-  it("registry", () => {
-    expect(b.registry).toEqual(a.registry);
+  it("registry (tags 2 and 3 unnamed since dcbor 1.0.0-beta.2)", () => {
+    // The baseline's inlined dcbor-compat always named the bignum tags;
+    // dcbor 1.0.0-beta.2 names them only on request, as the reference names
+    // them only under its `num-bigint` feature — which `bc-tags` does not
+    // enable, so `bc_tags::register_tags_in` leaves them unnamed (executed:
+    // the harness's default build reports `"2"` / `"3"`). Every other probe
+    // is compared verbatim.
+    const expected = a.registry.map(([value, name]) =>
+      value === 2 || value === 3 ? [value, String(value)] : [value, name],
+    );
+    expect(b.registry).toEqual(expected);
   });
 });
