@@ -70,4 +70,24 @@ describe.skipIf(!built)("dist packaging", () => {
         .sort();
     expect(names(cjs)).toEqual(names(esm));
   });
+
+  // dcbor keeps its global store on `globalThis`, so the CommonJS build of
+  // this package and the ESM build of dcbor resolve one store, as the
+  // reference has one `GLOBAL_TAGS` per process (N12).
+  it("registerTags through the CJS entry names the ESM global store", async () => {
+    const require_ = createRequire(import.meta.url);
+    let cjs: { registerTags(): void };
+    try {
+      cjs = require_(join(dist, "index.cjs")) as { registerTags(): void };
+    } catch (error) {
+      console.warn(`CJS entry could not be loaded in this environment: ${String(error)}`);
+      return;
+    }
+    const dcbor = (await import("@blockchaincommons/dcbor")) as {
+      getGlobalTagsStore(): { nameForValue(value: number): string };
+    };
+    cjs.registerTags();
+    expect(dcbor.getGlobalTagsStore().nameForValue(200)).toBe("envelope");
+    expect(dcbor.getGlobalTagsStore().nameForValue(1347571542)).toBe("provenance");
+  });
 });

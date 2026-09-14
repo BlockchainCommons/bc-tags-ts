@@ -14,6 +14,10 @@
 - [ ] The tags are now canonical `@blockchaincommons/dcbor` `Tag` values, not
       `dcbor-compat` ones. If you build tagged CBOR with them, use dcbor.
 - [ ] `registerTagsIn(store)` → `registerTags(store)`; `registerTags()` is unchanged.
+- [ ] `registerTags` no longer names tags 2 and 3 (the reference's default
+      build leaves them unnamed). If you relied on `positive-bignum` /
+      `bignum(…)` output, call `registerStandardTags(store, { bignum: true })`
+      before `registerTags(store)`.
 - [ ] `SEED_V1`, `EC_KEY_V1`, `SSKR_SHARE_V1` and the other `*_V1` tags moved
       under `LEGACY_TAGS` (`LEGACY_TAGS.SEED_V1`).
 - [ ] Import `getGlobalTagsStore` and `TagsStore` from
@@ -56,10 +60,14 @@ They are still in `ALL_TAGS` and still registered by `registerTags()`.
 
 ## 4. Registration semantics
 
-`registerTags(store)` calls dcbor's `registerStandardTags(store)` (date and
-bignum tags with their summarizers) and then registers `ALL_TAGS`. It is
-idempotent. Registering a value that is already present under a *different*
-name throws, as dcbor's store does.
+`registerTags(store)` calls dcbor's `registerStandardTags(store)` (the `date`
+tag and its summarizer; tags 2 and 3 stay unnamed, as in the reference's
+default build) and then registers `ALL_TAGS`. It is idempotent, and a name
+already registered under another value moves to this package's value, as the
+reference's `insert_all` does. Registering a value that is already present
+under a *different* name throws dcbor's `CborError` (code `Custom`) with the
+reference's panic text; tags registered earlier in the call stay registered
+and the rejected entry is unchanged.
 
 ## 5. Identity and immutability
 
@@ -69,13 +77,3 @@ Tags compare by value: `TAG_ENVELOPE === Tag.from(200, "envelope")` is
 Every constant is frozen. `(TAG_ENVELOPE as any).name = "x"` used to
 succeed in `@bcts/tags` and silently rename the wire tag for every later
 `registerTags()`; it now throws a `TypeError`.
-
-## 6. Node and TypeScript floors
-
-Node **22.12** and TypeScript **5.7**. The IIFE / global-script build is
-gone; use the ESM or CJS entry.
-
-## 7. What did not change
-
-- Every tag value and name, and the registration order.
-- `registerTags()` with no argument.

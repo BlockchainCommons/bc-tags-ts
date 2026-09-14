@@ -57,3 +57,33 @@ jobs:
 
       - name: Check dependency hygiene
         run: bun run check:deps
+
+  rust-validation:
+    name: Cross-validate vectors against the Rust reference
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      # The runner image ships a stable Rust toolchain.
+      - name: Validate against bc-tags (default build)
+        working-directory: tests/rust-validation
+        run: cargo run --release --locked -- ../vectors/vectors.json
+
+      - name: Validate the bignum recipe (num-bigint build)
+        working-directory: tests/rust-validation
+        run: cargo run --release --locked --features bignum -- ../vectors/vectors.json
+
+      # The identifier check must bite: the swapped-label fixture fails with
+      # exactly two identifier mismatches.
+      - name: Reject the swapped-identifier fixture
+        working-directory: tests/rust-validation
+        run: |
+          set +e
+          output=$(cargo run --release --locked --quiet -- fixtures/swapped-identifiers.json 2>&1 >/dev/null)
+          status=$?
+          set -e
+          printf '%s\n' "$output"
+          test "$status" -eq 1
+          test "$(printf '%s\n' "$output" | grep -c '^MISMATCH ident ')" -eq 2

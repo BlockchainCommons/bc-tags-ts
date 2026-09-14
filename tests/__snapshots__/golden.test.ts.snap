@@ -87,8 +87,8 @@ exports[`golden: freeze additions > mutate a constant, then registerTags into a 
 exports[`golden: tag table > registry after registerTags on a fresh store 1`] = `
 [
   "1 → date",
-  "2 → positive-bignum",
-  "3 → negative-bignum",
+  "2 → 2",
+  "3 → 3",
   "24 → encoded-cbor",
   "32 → url",
   "37 → uuid",

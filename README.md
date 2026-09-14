@@ -29,7 +29,7 @@ registerTags();
 getGlobalTagsStore().nameForValue(TAG_ENVELOPE.value); // "envelope"
 
 // Or into a store of your own. A value already registered under a
-// different name throws (dcbor's Error); the same name is a no-op.
+// different name throws dcbor's CborError (code Custom); the same name is a no-op.
 const store = new TagsStore();
 registerTags(store);
 
@@ -56,13 +56,13 @@ Runnable examples live in the [`examples/`](https://github.com/BlockchainCommons
 
 ### Version History
 
+- **1.0.0-beta.3 (September 14, 2026)** - Requires `@blockchaincommons/dcbor` ^1.0.0-beta.3, so tags 2 and 3 are unnamed; conflicts documented as dcbor's `CborError`.
 - **1.0.0-beta.2 (September 12, 2026)** - Documents the bignum-registration difference from Rust builds without `num-bigint`.
 - **1.0.0-beta.1 (September 9, 2026)** - Initial beta implementation.
 
 ### Roadmap
 
 - Continued testing and auditing on the path from beta to a stable **1.0.0** release.
-- Continued parity with the Rust reference implementation as it evolves (see [`RUST_DIVERGENCES.md`](./RUST_DIVERGENCES.md)).
 
 ### Dependencies
 
