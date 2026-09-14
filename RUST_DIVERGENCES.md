@@ -26,43 +26,9 @@ Against the pinned crate, the harness checks:
 
 `fixtures/swapped-identifiers.json` must fail with two identifier mismatches.
 
-No tag number, name, order, message or encoded byte differs.
-
 ## 1. True behavioral divergences (same input, different outcome)
 
-### 1.1 Conflicting registration
-
-When a store already holds one of these values under a different name:
-- `bc_tags::register_tags_in` panics in dcbor's `TagsStore::insert`.
-- `registerTags` throws dcbor's `CborError` with code `Custom`.
-
-Both fail at the same tag, in the same order, with the same text (`Attempt to register tag: 200 'not-envelope' with different name: 'envelope'`); this is a harness vector. Tags registered earlier in the same call stay registered on both sides.
-
-The store left behind is not a contract:
-- **The conflicting value's entry.** The reference has already replaced it when it panics, and its name map is not updated. TypeScript leaves the entry unchanged, so a caught error has no effect on the entry it rejects. TypeScript could copy the reference's half-written state, but it would then leave `nameForValue` and `tagForName` disagreeing after an ordinary, recoverable error; the reference state is observable only through `catch_unwind`.
-- **The global store.** A panic in `register_tags()` poisons the reference's global store, and every later access panics. The TypeScript global store stays usable.
-
-A name already registered under a different value moves back to the registered value on both sides, without an error. This includes dcbor's `date`, and with the bignum recipe `positive-bignum`/`negative-bignum`. The unnamed and empty-name registration errors cannot be reached through this package; see dcbor's `RUST_DIVERGENCES.md` §1.2.
-
-## 2. JS-only input domain (no Rust analog exists)
-
-- **Non-store arguments.** `registerTags(null)`, `registerTags({})` and other values that are not a `TagsStore` throw a `TypeError` from the first store call, before anything is registered. `undefined` selects the global store.
-- **Mutating a tag.** Every constant, `LEGACY_TAGS` and `ALL_TAGS` are frozen, and dcbor stores and returns frozen tags. An assignment throws `TypeError` in strict-mode code (every ES module) and does nothing in sloppy-mode scripts, so a registered name cannot be changed through a `Tag`.
-
-## 3. Mapping equivalences (JS-specific inputs validated via their byte-target)
-
-- **Constants.** Rust's `TAG_<NAME>: u64` and `TAG_NAME_<NAME>: &str` are one frozen dcbor `Tag` here: use `.value` and `.name`. Equality is by value on both sides (`Tag.equals`, Rust's `PartialEq`), never by object identity.
-- **Legacy tags.** Rust's flat `TAG_SEED_V1` … `TAG_ACCOUNT_V1` are `LEGACY_TAGS.SEED_V1` … `LEGACY_TAGS.ACCOUNT_V1`.
-- **`ALL_TAGS`.** The reference's private registration vector, public and frozen here, in the same order.
-- **IANA tags.** URI (32), UUID (37) and encoded CBOR (24) are written in this package, as Rust's `bc-tags` writes them; dcbor defines only the date and bignum tags on both sides.
-- **Registration.** `registerTags(store?)` is `register_tags_in(&mut store)` with a store and `register_tags()` without one; repeating it is a no-op.
-- **Global store.** `registerTags()` fills dcbor's single process-wide store. The ESM and CommonJS builds share it, as Rust has one `GLOBAL_TAGS` per semver-compatible dcbor.
-- **No dcbor re-export.** Rust's `bc_tags` re-exports `dcbor::prelude::*`. Import `TagsStore`, `Tag` and the formatters from `@blockchaincommons/dcbor`.
-- **Standard tags 2 and 3.** `registerTags` registers dcbor's standard tags as the reference's default build does:
-  - `date` (1) with its summarizer;
-  - tags 2 and 3 unnamed, with no summarizers, because `bc-tags` depends on dcbor without `num-bigint`.
-
-  For the `num-bigint` registry (`positive-bignum`/`negative-bignum`, `bignum(…)` summaries), call `registerStandardTags(store, { bignum: true })` **before** `registerTags(store)`. That is the reference's registration order. The reverse order gives the same registry on a store without conflicts. The harness's `--features bignum` run validates this recipe. It needs `@blockchaincommons/dcbor` ≥ the declared floor.
+None. No tag number, name, registration order, conflict message, lookup or encoded byte differs from the reference for any input both sides can hold. A conflicting registration throws dcbor's `CborError` (code `Custom`) where the reference panics, at the same tag with the same text.
 
 ## Maintenance
 
