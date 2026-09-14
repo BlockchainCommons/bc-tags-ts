@@ -77,13 +77,3 @@ Tags compare by value: `TAG_ENVELOPE === Tag.from(200, "envelope")` is
 Every constant is frozen. `(TAG_ENVELOPE as any).name = "x"` used to
 succeed in `@bcts/tags` and silently rename the wire tag for every later
 `registerTags()`; it now throws a `TypeError`.
-
-## 6. Node and TypeScript floors
-
-Node **22.12** and TypeScript **5.7**. The IIFE / global-script build is
-gone; use the ESM or CJS entry.
-
-## 7. What did not change
-
-- Every tag value and name, and the registration order.
-- `registerTags()` with no argument.

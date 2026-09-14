@@ -56,14 +56,13 @@ Runnable examples live in the [`examples/`](https://github.com/BlockchainCommons
 
 ### Version History
 
-- **Unreleased** - Requires `@blockchaincommons/dcbor` ^1.0.0-beta.3, so tags 2 and 3 are unnamed as in the reference's default build; the Rust harness checks identifiers, registration order, summarizers, dcbor's names, conflicts and rendering in both dcbor builds; registration-contract tests; conflicts documented as dcbor's `CborError`.
+- **1.0.0-beta.3 (September 14, 2026)** - Requires `@blockchaincommons/dcbor` ^1.0.0-beta.3, so tags 2 and 3 are unnamed; conflicts documented as dcbor's `CborError`.
 - **1.0.0-beta.2 (September 12, 2026)** - Documents the bignum-registration difference from Rust builds without `num-bigint`.
 - **1.0.0-beta.1 (September 9, 2026)** - Initial beta implementation.
 
 ### Roadmap
 
 - Continued testing and auditing on the path from beta to a stable **1.0.0** release.
-- Continued parity with the Rust reference implementation as it evolves (see [`RUST_DIVERGENCES.md`](./RUST_DIVERGENCES.md)).
 
 ### Dependencies
 

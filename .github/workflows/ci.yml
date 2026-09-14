@@ -66,8 +66,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
-      # The runner image ships a stable Rust toolchain. The default build is
-      # the reference every Rust consumer uses (dcbor without num-bigint).
+      # The runner image ships a stable Rust toolchain.
       - name: Validate against bc-tags (default build)
         working-directory: tests/rust-validation
         run: cargo run --release --locked -- ../vectors/vectors.json
