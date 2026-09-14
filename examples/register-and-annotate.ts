@@ -8,7 +8,7 @@ import { Tag, TagsStore, bytesToHex, encodeCbor, taggedValue } from "@blockchain
 import { diagnostic } from "@blockchaincommons/dcbor/diagnostic";
 import { ALL_TAGS, LEGACY_TAGS, TAG_ENVELOPE, TAG_LEAF, registerTags } from "../src/index";
 
-// dcbor's standard tags first (date, bignums), then all 75 of this package.
+// dcbor's standard tags first (date), then all 75 of this package.
 const store = new TagsStore();
 registerTags(store);
 

@@ -1,5 +1,11 @@
 import * as tags from "../src/index";
-import { getGlobalTagsStore, TagsStore } from "@blockchaincommons/dcbor";
+import {
+  CborError,
+  Tag,
+  getGlobalTagsStore,
+  registerStandardTags,
+  TagsStore,
+} from "@blockchaincommons/dcbor";
 
 describe("Tags Registry", () => {
   describe("Core Envelope Tags", () => {
@@ -374,5 +380,121 @@ describe("Tags Registry", () => {
         expect(tag.name).not.toMatch(/[A-Z_]/);
       }
     });
+  });
+});
+
+/**
+ * What `registerTags` guarantees on a pre-populated store, each assertion
+ * matching an executed outcome of `bc_tags::register_tags_in` (the Rust
+ * side is replayed by tests/rust-validation).
+ */
+describe("registration contract (Rust parity)", () => {
+  const values = (store: TagsStore, probes: number[]): string[] =>
+    probes.map((v) => store.nameForValue(v));
+  const PROBES = [...new Set([...tags.ALL_TAGS.map((t) => Number(t.value)), 1, 2, 3, 100, 999999])];
+
+  const registerOver = (pre: [number, string][]): { store: TagsStore; error: unknown } => {
+    const store = new TagsStore();
+    for (const [value, name] of pre) store.register(Tag.from(value, name));
+    let error: unknown;
+    try {
+      tags.registerTags(store);
+    } catch (e) {
+      error = e;
+    }
+    return { store, error };
+  };
+
+  it("a conflicting value throws dcbor's CborError Custom with the reference's panic text (N2)", () => {
+    const { store, error } = registerOver([[200, "not-envelope"]]);
+    expect(CborError.isCborError(error) && error.code === "Custom").toBe(true);
+    expect((error as Error).message).toBe(
+      "Attempt to register tag: 200 'not-envelope' with different name: 'envelope'",
+    );
+    // The rejected entry is unchanged and the name map untouched; tags
+    // registered earlier in the same call stay, later ones are absent.
+    expect(store.nameForValue(200)).toBe("not-envelope");
+    expect(store.tagForName("envelope")).toBeUndefined();
+    expect(store.nameForValue(32)).toBe("url");
+    expect(store.nameForValue(24)).toBe("encoded-cbor");
+    expect(store.nameForValue(201)).toBe("201");
+  });
+
+  it("tag 1 under another name throws the same way, before its summarizer is set", () => {
+    const { store, error } = registerOver([[1, "other"]]);
+    expect(CborError.isCborError(error) && error.code === "Custom").toBe(true);
+    expect((error as Error).message).toBe(
+      "Attempt to register tag: 1 'other' with different name: 'date'",
+    );
+    expect(store.summarizer(1)).toBeUndefined();
+  });
+
+  it("a name registered under another value moves to the registered value, dcbor's date included (N11)", () => {
+    const envelope = registerOver([[777, "envelope"]]);
+    expect(envelope.error).toBeUndefined();
+    expect(envelope.store.tagForName("envelope")?.value).toBe(200);
+    expect(envelope.store.nameForValue(777)).toBe("envelope");
+
+    const date = registerOver([
+      [1, "date"],
+      [99, "date"],
+    ]);
+    expect(date.error).toBeUndefined();
+    expect(date.store.tagForName("date")?.value).toBe(1);
+    expect(date.store.nameForValue(99)).toBe("date");
+  });
+
+  it("the default registry leaves tags 2 and 3 unnamed and unsummarized (N1 floor guard)", () => {
+    const store = new TagsStore();
+    tags.registerTags(store);
+    expect(store.summarizer(1)).toBeDefined();
+    expect(store.summarizer(2)).toBeUndefined();
+    expect(store.summarizer(3)).toBeUndefined();
+    expect(store.nameForValue(2)).toBe("2");
+    expect(store.nameForValue(3)).toBe("3");
+    expect(store.tagForName("positive-bignum")).toBeUndefined();
+    expect(store.tagForName("negative-bignum")).toBeUndefined();
+  });
+
+  it("the bignum recipe gives one registry in either order; the reference order registers 1, 2, 3 first", () => {
+    const recipe = new TagsStore();
+    registerStandardTags(recipe, { bignum: true });
+    tags.registerTags(recipe);
+    const reversed = new TagsStore();
+    tags.registerTags(reversed);
+    registerStandardTags(reversed, { bignum: true });
+    expect(values(recipe, PROBES)).toEqual(values(reversed, PROBES));
+    expect(recipe.nameForValue(2)).toBe("positive-bignum");
+    expect(recipe.nameForValue(3)).toBe("negative-bignum");
+    for (const store of [recipe, reversed]) {
+      expect([1, 2, 3].map((v) => store.summarizer(v) !== undefined)).toEqual([true, true, true]);
+    }
+
+    class RecordingStore extends TagsStore {
+      readonly calls: number[] = [];
+      override register(tag: Tag): void {
+        this.calls.push(Number(tag.value));
+        super.register(tag);
+      }
+    }
+    const recording = new RecordingStore();
+    registerStandardTags(recording, { bignum: true });
+    tags.registerTags(recording);
+    // First registrations in the reference's sequence; a repeat (date again,
+    // through registerTags) is a same-name no-op.
+    expect([...new Set(recording.calls)]).toEqual([
+      1,
+      2,
+      3,
+      ...tags.ALL_TAGS.map((t) => Number(t.value)),
+    ]);
+  });
+
+  it("the registry holds frozen tags, and this package's constants by identity", () => {
+    const store = new TagsStore();
+    tags.registerTags(store);
+    expect(Object.isFrozen(store.tagForValue(1))).toBe(true);
+    expect(store.tagForValue(200)).toBe(tags.TAG_ENVELOPE);
+    expect(store.tagForValue(300)).toBe(tags.LEGACY_TAGS.SEED_V1);
   });
 });

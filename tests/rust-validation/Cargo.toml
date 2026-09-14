@@ -3,11 +3,24 @@ name = "tags-validation"
 version = "0.1.0"
 edition = "2021"
 publish = false
+description = "Cross-validates @blockchaincommons/tags vectors against the Rust reference (bc-tags-rust over dcbor)."
 
 [dependencies]
 bc-tags = "=0.12.0"
-# TypeScript always registers bignum tags. Enable the corresponding Rust
-# feature for comparison; see RUST_DIVERGENCES.md. Without it, probes 2 and 3 differ.
-dcbor = "0.25"
+# Default features = the reference build: `bc-tags` depends on dcbor without
+# `num-bigint`, so tags 2 and 3 stay unnamed. `--features bignum` validates the
+# documented opt-in recipe only.
+dcbor = "=0.25.2"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
+hex = "0.4"
+
+[build-dependencies]
+# build.rs generates the identifier table from ../vectors/vectors.json.
+serde_json = "1"
+
+[features]
+# `cargo run --release --offline --features bignum -- ../vectors/vectors.json`:
+# the reference with `num-bigint`, which names tags 2/3 and installs their
+# summarizers; validates the `registerStandardTags(store, { bignum: true })` recipe.
+bignum = ["dcbor/num-bigint"]

@@ -1,6 +1,6 @@
 {
   "name": "@blockchaincommons/tags",
-  "version": "1.0.0-beta.2",
+  "version": "1.0.0-beta.3",
   "type": "module",
   "sideEffects": false,
   "description": "Blockchain Commons CBOR Tags Registry for TypeScript",
@@ -100,6 +100,6 @@
     "vitest": "^5.0.0"
   },
   "dependencies": {
-    "@blockchaincommons/dcbor": "^1.0.0-beta.1"
+    "@blockchaincommons/dcbor": "^1.0.0-beta.3"
   }
 }

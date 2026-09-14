@@ -14,6 +14,10 @@
 - [ ] The tags are now canonical `@blockchaincommons/dcbor` `Tag` values, not
       `dcbor-compat` ones. If you build tagged CBOR with them, use dcbor.
 - [ ] `registerTagsIn(store)` → `registerTags(store)`; `registerTags()` is unchanged.
+- [ ] `registerTags` no longer names tags 2 and 3 (the reference's default
+      build leaves them unnamed). If you relied on `positive-bignum` /
+      `bignum(…)` output, call `registerStandardTags(store, { bignum: true })`
+      before `registerTags(store)`.
 - [ ] `SEED_V1`, `EC_KEY_V1`, `SSKR_SHARE_V1` and the other `*_V1` tags moved
       under `LEGACY_TAGS` (`LEGACY_TAGS.SEED_V1`).
 - [ ] Import `getGlobalTagsStore` and `TagsStore` from
@@ -56,10 +60,14 @@ They are still in `ALL_TAGS` and still registered by `registerTags()`.
 
 ## 4. Registration semantics
 
-`registerTags(store)` calls dcbor's `registerStandardTags(store)` (date and
-bignum tags with their summarizers) and then registers `ALL_TAGS`. It is
-idempotent. Registering a value that is already present under a *different*
-name throws, as dcbor's store does.
+`registerTags(store)` calls dcbor's `registerStandardTags(store)` (the `date`
+tag and its summarizer; tags 2 and 3 stay unnamed, as in the reference's
+default build) and then registers `ALL_TAGS`. It is idempotent, and a name
+already registered under another value moves to this package's value, as the
+reference's `insert_all` does. Registering a value that is already present
+under a *different* name throws dcbor's `CborError` (code `Custom`) with the
+reference's panic text; tags registered earlier in the call stay registered
+and the rejected entry is unchanged.
 
 ## 5. Identity and immutability
 

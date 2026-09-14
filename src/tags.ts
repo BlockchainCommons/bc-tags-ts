@@ -12,27 +12,25 @@
  * @see https://github.com/BlockchainCommons/Research/blob/master/papers/bcr-2020-006-urtypes.md
  * @module tags
  */
-import {
-  Tag,
-  TAG_ENCODED_CBOR as IANA_ENCODED_CBOR,
-  TAG_URI as IANA_URI,
-  TAG_UUID as IANA_UUID,
-} from "@blockchaincommons/dcbor";
+import { Tag } from "@blockchaincommons/dcbor";
 
 /**
- * One immutable tag. dcbor's `Tag.from` returns a plain object whose
- * `readonly` is a compile-time promise only; the names here are wire,
- * so nothing may rewrite them process-wide.
+ * One immutable tag. dcbor's `Tag.from` returns a frozen object (since
+ * 1.0.0-beta.3, as the reference's `Tag` is a value); the freeze here is
+ * kept as defence in depth so the constants stay frozen on any dcbor the
+ * floor admits. The names are wire, so nothing may rewrite them
+ * process-wide.
  */
 const tag = (value: number, name: string): Tag => Object.freeze(Tag.from(value, name));
 
-// IANA standard tags this stack uses. dcbor owns the numbers (it defines
-// them unnamed); this registry owns the names.
+// IANA standard tags this stack uses. The numbers are written here, as the
+// Rust reference writes them in `bc-tags` (dcbor defines only the date and
+// bignum tags); this registry owns the names.
 
 /** #6.32: URI (RFC 8949 §3.4.5.3), named `url` in this stack. */
-export const TAG_URI: Tag = tag(IANA_URI, "url");
+export const TAG_URI: Tag = tag(32, "url");
 /** #6.37: binary UUID (RFC 4122). */
-export const TAG_UUID: Tag = tag(IANA_UUID, "uuid");
+export const TAG_UUID: Tag = tag(37, "uuid");
 
 // Core Envelope tags. #6.24 was used as the leaf header by an earlier spec
 // (incorrectly: RFC 8949 §3.4.5.1 requires a byte string); #6.201 replaced
@@ -40,7 +38,7 @@ export const TAG_UUID: Tag = tag(IANA_UUID, "uuid");
 // Blockchain Commons tags in IANA's "Specification Required" range.
 
 /** #6.24: encoded CBOR data item; the pre-#6.201 Envelope leaf header, accepted on decode only. */
-export const TAG_ENCODED_CBOR: Tag = tag(IANA_ENCODED_CBOR, "encoded-cbor");
+export const TAG_ENCODED_CBOR: Tag = tag(24, "encoded-cbor");
 /** #6.200: Gordian Envelope. */
 export const TAG_ENVELOPE: Tag = tag(200, "envelope");
 /** #6.201: dCBOR data item; the Envelope leaf case. */

@@ -1,8 +1,9 @@
 /**
  * The vector shape for this package: the full tag table and the registry a
- * fresh `registerTags()` produces. Works over any module shape, pre- or
- * post-redesign, so the golden, differential and generator scripts share
- * one definition.
+ * fresh `registerTags()` produces, plus the semantic blocks of
+ * `./semantics.ts` (identifiers are checked by the harness from `table`).
+ * Works over any module shape, pre- or post-redesign, so the golden,
+ * differential and generator scripts share one definition.
  */
 export interface TableEntry {
   /** Exported constant name (`SEED_V1` even when grouped under `LEGACY_TAGS`). */
@@ -10,11 +11,63 @@ export interface TableEntry {
   value: number;
   name: string;
 }
+
+/** One registration scenario: a pre-populated store, then `registerTags`. */
+export interface ConflictRow {
+  /** `[value, name]` registrations made on a fresh store before `registerTags`. */
+  pre: [number, string][];
+  /**
+   * The `CborError` message `registerTags` throws (the reference's panic
+   * text), or `null` when the registration succeeds.
+   */
+  message: string | null;
+  /**
+   * Lookups after a registration that succeeded. Absent when it threw: the
+   * post-conflict store is not a contract (RUST_DIVERGENCES.md §1.1).
+   */
+  after?: {
+    tagForName: [string, number | null][];
+    nameForValue: [number, string][];
+  };
+}
+
+/** Renderings of one tagged item through a store `registerTags` filled. */
+export interface FormatRow {
+  hex: string;
+  /** `diagnostic(value, { annotate: true, tags: store })` */
+  annotate: string;
+  /** `diagnostic(value, { summarize: true, tags: store })` */
+  summarize: string;
+  /** `hexAnnotated(value, { tagsStore: store })` */
+  hexAnnotated: string;
+}
+
+/**
+ * The registry produced by the documented `num-bigint` recipe
+ * (`registerStandardTags(store, { bignum: true })`, then `registerTags`).
+ * Checked by the harness's `--features bignum` build only.
+ */
+export interface BignumBlock {
+  registry: [number, string][];
+  summarizers: [number, boolean][];
+  names: [string, number | null][];
+  conflicts: ConflictRow[];
+}
+
 export interface Vectors {
   count: number;
   table: TableEntry[];
   /** `[value, nameForValue(value)]` after `registerTags()` on a fresh store. */
   registry: [number, string][];
+  /** The values `registerTags` registers, in call order, without dcbor's own. */
+  order?: number[];
+  /** `[value, summarizer(value) !== undefined]` after `registerTags()`. */
+  summarizers?: [number, boolean][];
+  /** `[name, tagForName(name)?.value ?? null]` after `registerTags()`. */
+  names?: [string, number | null][];
+  conflicts?: ConflictRow[];
+  format?: FormatRow[];
+  bignum?: BignumBlock;
 }
 
 interface TagLike {
