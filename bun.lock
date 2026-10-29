@@ -46,7 +46,7 @@
 
     "@bcoe/v8-coverage": ["@bcoe/v8-coverage@1.0.2", "", {}, "sha512-6zABk/ECA/QYSCQ1NGiVwwbQerUCZ+TQbp64Q3AgmfNvurHH0j8TtXa1qbShXA6qqkpAj4V5W8pP6mLe1mcMqA=="],
 
-    "@blockchaincommons/dcbor": ["@blockchaincommons/dcbor@1.0.0-beta.3", "", {}, "sha512-WMX+A+ohCNl5vbq8jv+8/N+ygmgFG9V2V60dggRa8WfO+Ab/vvhl7W8mMeY9Rm9iSll3CK1q0bSNoWHPWfu9eg=="],
+    "@blockchaincommons/dcbor": ["@blockchaincommons/dcbor@1.0.0-beta.5", "", {}, "sha512-dmuEkmfcJk6g/+m73F9Rosxb+sHb790fiNfOdE6CI/TFLZCnXCRr3+K1QR4Se+vtBllEBgv85s28zaC1Jnegkw=="],
 
     "@braidai/lang": ["@braidai/lang@1.1.2", "", {}, "sha512-qBcknbBufNHlui137Hft8xauQMTZDKdophmLFv05r2eNmdIv/MlPuP4TdUknHG68UdWLgVZwgxVe735HzJNIwA=="],
 
